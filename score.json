@@ -1,1 +1,15 @@
-{"test":3,"at":"20:21:00"}
+{
+ "home": "Fremantle",
+ "away": "Geelong",
+ "complete": 7.0,
+ "home_score": 18,
+ "away_score": 6,
+ "home_goals": 3,
+ "home_behinds": 0,
+ "away_goals": 1,
+ "away_behinds": 0,
+ "clock": "Q1 9:24",
+ "winner": null,
+ "squiggle_updated": "2026-09-11 20:20:52",
+ "polled_at": "2026-09-11T20:21:51+10:00"
+}
