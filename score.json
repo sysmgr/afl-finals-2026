@@ -3,13 +3,13 @@
  "away": "Geelong",
  "complete": 49.0,
  "home_score": 65,
- "away_score": 38,
+ "away_score": 44,
  "home_goals": 10,
  "home_behinds": 5,
- "away_goals": 6,
+ "away_goals": 7,
  "away_behinds": 2,
- "clock": "Q2 30:02",
+ "clock": "Q2 30:56",
  "winner": null,
- "squiggle_updated": "2026-09-11 21:20:07",
- "polled_at": "2026-09-11T21:20:22+10:00"
+ "squiggle_updated": "2026-09-11 21:21:02",
+ "polled_at": "2026-09-11T21:21:55+10:00"
 }
