@@ -292,7 +292,27 @@ a{color:var(--led)}
     } else {
       $('inplay').hidden = true;
     }
+    applyScore(null);
     stamps();
+  }
+
+  // live score between breaks (the public site only): the chance stays as at the last break
+  let lastScore = null;
+  function applyScore(sc){
+    if (sc) lastScore = sc;
+    sc = lastScore;
+    const ip = latest && latest.in_game;
+    if (!sc || !ip || ip.status === 'FT' || sc.home !== ip.home || sc.away !== ip.away) return;
+    if ((sc.complete ?? 0) <= (ip.complete ?? 0) && ip.status !== 'LIVE') return;
+    if (Date.now() - new Date(sc.polled_at).getTime() > 15 * 60000) return;
+    const gb = (g, b) => (g != null && b != null) ? `<span class="ip-gb">${g}.${b}</span>` : '';
+    $('ip-score').innerHTML =
+      `<span class="ip-team">${ip.home}</span>${gb(sc.home_goals, sc.home_behinds)}<span class="ip-pts">${sc.home_score ?? 0}</span>` +
+      `<span class="ip-team" style="color:var(--ink3)">v</span>` +
+      `<span class="ip-pts">${sc.away_score ?? 0}</span>${gb(sc.away_goals, sc.away_behinds)}<span class="ip-team">${ip.away}</span>`;
+    $('ip-q').textContent = sc.clock || 'LIVE';
+    const at = ip.status === 'LIVE' ? 'the bounce' : ip.status;
+    $('ip-title').textContent = (ip.stage || 'Semi-final') + ' · live score · chance as at ' + at;
   }
 
   function setConn(on, text){
@@ -317,6 +337,16 @@ a{color:var(--led)}
         } catch (e) { setConn(false, 'Can\u2019t reach the board \u2014 retrying'); }
       };
       setInterval(refresh, 60000);
+      const SCORE_URL = 'https://api.github.com/repos/sysmgr/afl-finals-2026/contents/score.json?ref=live';
+      const score = async () => {
+        try {
+          const r = await fetch(SCORE_URL + '&t=' + Date.now(), {cache: 'no-store'});
+          if (!r.ok) return;
+          const j = await r.json();
+          applyScore(JSON.parse(atob(j.content.replace(/\s/g, ''))));
+        } catch (e) {}
+      };
+      score(); setInterval(score, 90000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
       return;
     }
