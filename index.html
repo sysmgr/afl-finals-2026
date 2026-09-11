@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 Finals Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Red+Hat+Mono:wght@400;500&display=swap">
+<style>
+/* dark-first: a stadium scoreboard is a lit board on a dark ground. bare :root is the dark set. */
+:root{
+  --ground:#0D1015; --surface:#151A21; --raised:#1B222B; --rule:#252D38; --rule2:#323C49;
+  --ink:#E9EDF2; --ink2:#9CA6B4; --ink3:#6A7483;
+  --led:#F2A33A; --led-dim:#F2A33A33; --led-glow:#F2A33A55;
+  --up:#52B788; --down:#E5725F; --off:#4A5361;
+  --band:#F2A33A22;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --ground:#EEF0F3; --surface:#FFFFFF; --raised:#F6F7F9; --rule:#DDE1E7; --rule2:#C8CED7;
+    --ink:#12161C; --ink2:#4F5967; --ink3:#7F8896;
+    --led:#B3650E; --led-dim:#B3650E22; --led-glow:#B3650E33;
+    --up:#227A52; --down:#B8412F; --off:#A6AEB9;
+    --band:#B3650E18;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#EEF0F3; --surface:#FFFFFF; --raised:#F6F7F9; --rule:#DDE1E7; --rule2:#C8CED7;
+  --ink:#12161C; --ink2:#4F5967; --ink3:#7F8896;
+  --led:#B3650E; --led-dim:#B3650E22; --led-glow:#B3650E33;
+  --up:#227A52; --down:#B8412F; --off:#A6AEB9;
+  --band:#B3650E18;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:Barlow,ui-sans-serif,system-ui,sans-serif;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 22px 72px}
+.num{font-family:"Barlow Condensed",Barlow,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.mono{font-family:"Red Hat Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3)}
+
+/* --- top strip --- */
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;
+  padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{margin:0;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:clamp(1.9rem,4.4vw,2.6rem);
+  letter-spacing:.01em;line-height:1}
+.stage{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--led)}
+.status{display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--ink2)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--off);flex:none}
+.dot.on{background:var(--led);box-shadow:0 0 0 0 var(--led-glow);animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--led-glow)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.fresh{display:flex;flex-direction:column;gap:1px;text-align:right}
+.fresh .mono{font-size:.8rem;color:var(--ink3)}
+
+/* --- in play --- */
+.inplay{margin-top:20px;background:var(--surface);border:1px solid var(--led);border-radius:4px;
+  padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:10px 24px;align-items:center}
+.inplay[hidden]{display:none!important}
+.ip-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ip-q{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.1em;
+  background:var(--led);color:var(--ground);padding:3px 9px;border-radius:3px}
+.ip-score{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-top:6px}
+.ip-team{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.45rem}
+.ip-pts{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:2.3rem;line-height:1;
+  font-variant-numeric:tabular-nums}
+.ip-gb{font-family:"Red Hat Mono",monospace;font-size:.85rem;color:var(--ink3)}
+.chg li.gm{background:var(--led-dim)}
+.ip-prob{text-align:right}
+.ip-prob .big{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:3rem;line-height:1;
+  color:var(--led);font-variant-numeric:tabular-nums}
+.ip-prob .was{font-size:.85rem;color:var(--ink3)}
+@media (max-width:620px){.inplay{grid-template-columns:1fr}.ip-prob{text-align:left}}
+
+/* --- layout --- */
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:22px;margin-top:22px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.phead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:13px 16px;
+  border-bottom:1px solid var(--rule);background:var(--raised)}
+.phead h2{margin:0;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.15rem;letter-spacing:.04em}
+
+/* --- the board --- */
+.row{display:grid;grid-template-columns:28px minmax(0,1fr) 88px;gap:8px 12px;align-items:center;
+  padding:12px 16px;border-bottom:1px solid var(--rule)}
+.row:last-child{border-bottom:0}
+.row.out{opacity:.42}
+.seed{font-family:"Barlow Condensed",sans-serif;font-weight:600;color:var(--ink3);font-size:1rem;text-align:center}
+.club{min-width:0}
+.cname{font-weight:600;font-size:1.02rem;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.cmeta{font-size:.78rem;color:var(--ink3)}
+.track{position:relative;height:8px;background:var(--raised);border-radius:4px;margin-top:7px;overflow:hidden}
+.track .band{position:absolute;top:0;bottom:0;background:var(--band)}
+.track .fill{position:absolute;top:0;bottom:0;left:0;background:var(--led);border-radius:4px}
+.pct{text-align:right}
+.pct .v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.85rem;line-height:1;
+  font-variant-numeric:tabular-nums}
+.pct .r{font-size:.72rem;color:var(--ink3);font-family:"Red Hat Mono",monospace}
+.tag{font-family:"Barlow Condensed",sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;padding:1px 6px;border-radius:2px;border:1px solid var(--rule2);color:var(--ink2)}
+
+/* --- games --- */
+.game{padding:14px 16px;border-bottom:1px solid var(--rule)}
+.game:last-child{border-bottom:0}
+.gtop{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.gteams{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.25rem}
+.gwhen{font-size:.78rem;color:var(--ink3)}
+.gbar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin:10px 0 8px;background:var(--raised)}
+.gbar i{display:block;height:100%}
+.gstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gstat .k{font-size:.72rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.gstat .v{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.15rem;font-variant-numeric:tabular-nums}
+
+/* --- changes --- */
+.chg{list-style:none;margin:0;padding:0}
+.chg li{display:grid;grid-template-columns:86px 1fr auto;gap:10px;align-items:baseline;
+  padding:9px 16px;border-bottom:1px solid var(--rule);font-size:.88rem}
+.chg li:last-child{border-bottom:0}
+.chg .t{font-family:"Red Hat Mono",monospace;font-size:.76rem;color:var(--ink3)}
+.chg .d{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.up{color:var(--up)} .down{color:var(--down)}
+
+.empty{padding:28px 18px;color:var(--ink2);font-size:.95rem}
+.foot{margin-top:26px;font-size:.82rem;color:var(--ink3);max-width:78ch}
+.foot p+p{margin-top:8px}
+a{color:var(--led)}
+:focus-visible{outline:2px solid var(--led);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.dot.on{animation:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <h1>2026 Finals Live</h1>
+      <span class="stage" id="stage">Premiership forecast</span>
+    </div>
+    <div class="status">
+      <span class="dot" id="dot" aria-hidden="true"></span>
+      <div class="fresh">
+        <span id="conn">Connecting to the live forecast&hellip;</span>
+        <span class="mono" id="stamps"></span>
+      </div>
+    </div>
+  </div>
+
+  <section class="inplay" id="inplay" hidden aria-live="polite">
+    <div>
+      <div class="ip-head"><span class="ip-q" id="ip-q">IN PLAY</span><span class="lbl" id="ip-title"></span></div>
+      <div class="ip-score" id="ip-score"></div>
+    </div>
+    <div class="ip-prob">
+      <div class="lbl" id="ip-for"></div>
+      <div class="big" id="ip-p"></div>
+      <div class="was" id="ip-was"></div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="h-board">
+      <div class="phead"><h2 id="h-board">Premiership chance</h2><span class="lbl">band = spread across player windows</span></div>
+      <div id="board"><div class="empty">Waiting for the forecast to arrive.</div></div>
+    </section>
+
+    <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+      <section class="panel" aria-labelledby="h-games">
+        <div class="phead"><h2 id="h-games">Next games</h2><span class="lbl">model v bookmaker</span></div>
+        <div id="games"><div class="empty">&mdash;</div></div>
+      </section>
+      <section class="panel" aria-labelledby="h-chg">
+        <div class="phead"><h2 id="h-chg">What moved</h2><span class="lbl">newest first</span></div>
+        <ul class="chg" id="changes"><li><span></span><span class="t">&mdash;</span><span></span></li></ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p id="note"></p>
+    <p>This page checks for new numbers every minute &mdash; there is nothing to refresh. The lines are the bookmaker&rsquo;s, captured every three hours.</p>
+    <p>During a final the win chance is recalculated at each break from the margin, the time left and the model&rsquo;s pre-game margin, and every club&rsquo;s premiership chance is re-weighted by it; at full time the result is fixed and the bracket rebuilt. Ratings don&rsquo;t learn from the score itself &mdash; a side ten goals up isn&rsquo;t rated any better for its next final.</p>
+  </div>
+</div>
+
+<script type="application/json" id="board-data">{"schema":1,"checked_at":"2026-09-11T13:10:08+10:00","captured_at":"2026-09-11T11:10:58+10:00","stage":"Semi-finals","clubs":[{"team":"Hawthorn","seed":1,"alive":true,"wins_needed":2,"flag":0.335,"lo":0.315,"hi":0.354,"reach_pf":1.0,"reach_gf":0.62},{"team":"Sydney","seed":2,"alive":true,"wins_needed":2,"flag":0.2482,"lo":0.215,"hi":0.273,"reach_pf":1.0,"reach_gf":0.536},{"team":"Brisbane Lions","seed":3,"alive":true,"wins_needed":3,"flag":0.1665,"lo":0.161,"hi":0.173,"reach_pf":0.733,"reach_gf":0.312},{"team":"Fremantle","seed":4,"alive":true,"wins_needed":3,"flag":0.1245,"lo":0.121,"hi":0.129,"reach_pf":0.581,"reach_gf":0.266},{"team":"Geelong","seed":5,"alive":true,"wins_needed":3,"flag":0.1005,"lo":0.098,"hi":0.104,"reach_pf":0.419,"reach_gf":0.198},{"team":"Adelaide","seed":6,"alive":true,"wins_needed":3,"flag":0.025,"lo":0.024,"hi":0.027,"reach_pf":0.267,"reach_gf":0.068}],"next_games":[{"stage":"Semi-final","home":"Fremantle","away":"Geelong","venue":"Optus Stadium, Perth","bounce":"2026-09-11T20:10:00+10:00","model_leader":"Fremantle","model_margin":7.3,"p_home":0.582,"line":9.8,"consensus":10.42,"sources":"10/10"},{"stage":"Semi-final","home":"Brisbane Lions","away":"Adelaide","venue":"The Gabba, Brisbane","bounce":"2026-09-12T19:35:00+10:00","model_leader":"Brisbane Lions","model_margin":22.0,"p_home":0.732,"line":21.4,"consensus":19.9,"sources":"10/10"}],"changes":[{"at":"2026-09-11T08:10:57+10:00","kind":"flag","subject":"Fremantle","before":12.55,"after":12.45},{"at":"2026-09-11T08:10:57+10:00","kind":"flag","subject":"Geelong","before":9.95,"after":10.05},{"at":"2026-09-11T08:10:57+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.5,"after":21.4},{"at":"2026-09-11T08:10:57+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.6,"after":9.8},{"at":"2026-09-11T02:10:54+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.5,"after":10.6},{"at":"2026-09-10T20:10:51+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.6,"after":10.5},{"at":"2026-09-10T17:10:50+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.3,"after":21.5},{"at":"2026-09-10T17:10:50+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.5,"after":10.6},{"at":"2026-09-10T14:10:48+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.6,"after":21.3},{"at":"2026-09-10T14:10:48+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.4,"after":10.5},{"at":"2026-09-10T08:10:46+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.5,"after":21.6},{"at":"2026-09-09T20:10:41+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.06,"after":21.5},{"at":"2026-09-09T17:10:40+10:00","kind":"line","subject":"Fremantle v Geelong","before":10.3,"after":10.39},{"at":"2026-09-09T14:10:38+10:00","kind":"line","subject":"Brisbane Lions v Adelaide","before":21.0,"after":21.1}],"results":[],"note":"Premiership chances averaged over four player-rating windows; the grand final is simulated at a neutral venue. Rated on each club's last named side.","changed_at":"2026-09-11T08:10:57+10:00"}</script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const pc = (v, d=1) => (100*v).toFixed(d) + '%';
+  const short = t => ({'Brisbane Lions':'Brisbane'}[t] || t);
+  const fmtTime = iso => { if(!iso) return '—';
+    const d = new Date(iso); if (isNaN(d)) return iso;
+    return d.toLocaleString(undefined,{weekday:'short',hour:'numeric',minute:'2-digit'}); };
+  const ago = iso => { if(!iso) return '';
+    const s = (Date.now() - new Date(iso).getTime())/1000; if (isNaN(s)) return '';
+    if (s < 90) return 'just now'; if (s < 3600) return Math.round(s/60)+' min ago';
+    if (s < 86400) return Math.round(s/3600)+' h ago'; return Math.round(s/86400)+' d ago'; };
+  let latest = null;
+
+  function stamps(){
+    if (!latest) return;
+    $('stamps').textContent = 'checked ' + ago(latest.checked_at) +
+      ' · last change ' + ago(latest.changed_at) + ' · lines ' + fmtTime(latest.captured_at);
+  }
+
+  function render(d){
+    latest = d;
+    if (d.stage) $('stage').textContent = d.stage;
+    $('note').textContent = d.note || '';
+
+    // board
+    const clubs = Array.isArray(d.clubs) ? d.clubs : [];
+    const max = Math.max(0.01, ...clubs.map(c => c.hi || c.flag || 0));
+    $('board').innerHTML = clubs.length ? clubs.map(c => {
+      const w = v => Math.min(100, 100*(v||0)/max).toFixed(1);
+      const need = c.alive === false ? '<span class="tag">out</span>'
+        : `<span class="tag">${c.wins_needed} win${c.wins_needed===1?'':'s'} to the flag</span>`;
+      return `<div class="row${c.alive===false?' out':''}">
+        <span class="seed">${c.seed ?? ''}</span>
+        <div class="club">
+          <div class="cname">${c.team} ${need}</div>
+          <div class="cmeta">reach GF ${c.reach_gf!=null?pc(c.reach_gf,0):'—'}${c.wins_needed>2&&c.reach_pf!=null?' · reach PF '+pc(c.reach_pf,0):''}</div>
+          <div class="track" role="img" aria-label="${c.team} ${pc(c.flag)}">
+            <span class="band" style="left:${w(c.lo)}%;width:${(w(c.hi)-w(c.lo)).toFixed(1)}%"></span>
+            <span class="fill" style="width:${w(c.flag)}%"></span>
+          </div>
+        </div>
+        <div class="pct"><div class="v">${pc(c.flag)}</div><div class="r">${pc(c.lo,1)}–${pc(c.hi,1)}</div></div>
+      </div>`; }).join('') : '<div class="empty">No clubs in the forecast yet.</div>';
+
+    // games
+    const g = Array.isArray(d.next_games) ? d.next_games : [];
+    $('games').innerHTML = g.length ? g.map(x => {
+      const ph = x.p_home ?? 0.5;
+      const lineTxt = x.line==null ? 'not posted' : (x.line>=0 ? short(x.home) : short(x.away)) + ' by ' + Math.abs(x.line).toFixed(1);
+      return `<div class="game">
+        <div class="gtop"><span class="gteams">${x.home} <span style="color:var(--ink3)">v</span> ${x.away}</span>
+          <span class="gwhen">${x.stage||''} · ${fmtTime(x.bounce)}${x.venue?' · '+x.venue:''}</span></div>
+        <div class="gbar" aria-hidden="true"><i style="width:${(100*ph).toFixed(1)}%;background:var(--led)"></i><i style="width:${(100*(1-ph)).toFixed(1)}%;background:var(--rule2)"></i></div>
+        <div class="gstats">
+          <div class="gstat"><div class="k">Model</div><div class="v">${short(x.model_leader)} by ${(+x.model_margin).toFixed(1)}</div></div>
+          <div class="gstat"><div class="k">${short(x.home)} win</div><div class="v">${pc(ph,0)}</div></div>
+          <div class="gstat"><div class="k">Bookmaker</div><div class="v">${lineTxt}</div></div>
+        </div></div>`; }).join('') : '<div class="empty">No games scheduled.</div>';
+
+    // changes
+    const ch = Array.isArray(d.changes) ? d.changes : [];
+    $('changes').innerHTML = ch.length ? ch.map(e => {
+      const delta = (e.after - e.before);
+      if (e.kind === 'game'){
+        return `<li class="gm"><span class="t">${fmtTime(e.at)}</span><span>${e.subject}</span>
+          <span class="d">${short(e.team)} ${Math.round(e.before)}% → ${Math.round(e.after)}% <span class="${delta>=0?'up':'down'}">${delta>0?'▲':delta<0?'▼':''}</span></span></li>`;
+      }
+      if (e.kind === 'line'){
+        const home = (e.subject||'').split(' v ')[0];
+        return `<li><span class="t">${fmtTime(e.at)}</span><span>${e.subject} line</span>
+          <span class="d">${(+e.before).toFixed(2)} → ${(+e.after).toFixed(2)} <span class="${delta>=0?'up':'down'}">${delta>=0?'▲':'▼'}</span></span></li>`;
+      }
+      return `<li><span class="t">${fmtTime(e.at)}</span><span>${e.subject}</span>
+        <span class="d">${(+e.before).toFixed(2)}% → ${(+e.after).toFixed(2)}% <span class="${delta>=0?'up':'down'}">${delta>=0?'▲':'▼'}</span></span></li>`;
+    }).join('') : '<li><span></span><span style="color:var(--ink3)">Nothing has moved yet.</span><span></span></li>';
+
+    // in play
+    const ip = d.in_game;
+    if (ip && ip.home){
+      $('inplay').hidden = false;
+      const live = ip.status === 'LIVE';
+      const gb = (g, b) => (g != null && b != null) ? `<span class="ip-gb">${g}.${b}</span>` : '';
+      $('ip-q').textContent = live ? 'UNDERWAY' : (ip.status || 'IN PLAY');
+      $('ip-title').textContent = (ip.stage || 'Semi-final') +
+        (ip.status === 'FT' ? ' · result' : live ? ' · next update at quarter time' : ' · as at ' + (ip.status || 'the last break'));
+      $('ip-score').innerHTML = live
+        ? `<span class="ip-team">${ip.home}</span><span class="ip-team" style="color:var(--ink3)">v</span><span class="ip-team">${ip.away}</span>`
+        : `<span class="ip-team">${ip.home}</span>${gb(ip.home_goals, ip.home_behinds)}<span class="ip-pts">${ip.home_score ?? '–'}</span>` +
+          `<span class="ip-team" style="color:var(--ink3)">v</span>` +
+          `<span class="ip-pts">${ip.away_score ?? '–'}</span>${gb(ip.away_goals, ip.away_behinds)}<span class="ip-team">${ip.away}</span>`;
+      if (ip.status === 'FT'){
+        const w = (ip.home_score > ip.away_score) ? ip.home : (ip.away_score > ip.home_score ? ip.away : null);
+        $('ip-for').textContent = w ? 'Through' : 'Result';
+        $('ip-p').textContent = w ? short(w) : 'Draw';
+        $('ip-was').textContent = 'The board updates once the bracket is rebuilt.';
+      } else {
+        $('ip-for').textContent = short(ip.home) + ' to win';
+        $('ip-p').textContent = pc(ip.p_home_now ?? 0.5, 0);
+        $('ip-was').textContent = live ? 'the chance at the bounce' : (ip.p_home_pre != null ? 'was ' + pc(ip.p_home_pre,0) + ' at the bounce' : '');
+      }
+    } else {
+      $('inplay').hidden = true;
+    }
+    stamps();
+  }
+
+  function setConn(on, text){
+    $('dot').classList.toggle('on', !!on);
+    $('conn').textContent = text;
+  }
+
+  setInterval(stamps, 30000);
+
+  (async function(){
+    // the shareable copy carries its numbers in the page (report/live_public.html, built by
+    // code/live_public.py) because a database-backed page cannot be shared outside the org
+    const embedded = document.getElementById('board-data');
+    if (embedded){
+      try { render(JSON.parse(embedded.textContent)); setConn(true, 'Live'); }
+      catch (e) { setConn(false, 'This copy could not be read'); }
+      const refresh = async () => {
+        try {
+          const r = await fetch('board.json?t=' + Date.now(), {cache: 'no-store'});
+          if (!r.ok) throw new Error(r.status);
+          render(await r.json()); setConn(true, 'Live');
+        } catch (e) { setConn(false, 'Can\u2019t reach the board \u2014 retrying'); }
+      };
+      setInterval(refresh, 60000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+      return;
+    }
+    
+  })();
+})();
+</script>
+
+</body>
+</html>
