@@ -204,7 +204,10 @@ a{color:var(--led)}
 
   function stamps(){
     if (!latest) return;
-    $('stamps').textContent = 'checked ' + ago(latest.checked_at) +
+    const ip = latest.in_game;
+    const live = typeof lastScore !== 'undefined' && lastScore && ip && ip.status !== 'FT' && lastScore.home === ip.home;
+    $('stamps').textContent = (live ? 'score ' + ago(lastScore.polled_at) + ' · ' : '') +
+      'forecast checked ' + ago(latest.checked_at) +
       ' · last change ' + ago(latest.changed_at) + ' · lines ' + fmtTime(latest.captured_at);
   }
 
@@ -313,6 +316,7 @@ a{color:var(--led)}
     $('ip-q').textContent = sc.clock || 'LIVE';
     const at = ip.status === 'LIVE' ? 'the bounce' : ip.status;
     $('ip-title').textContent = (ip.stage || 'Semi-final') + ' · live score · chance as at ' + at;
+    stamps();
   }
 
   function setConn(on, text){
