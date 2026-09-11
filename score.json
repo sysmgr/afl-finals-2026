@@ -1,15 +1,15 @@
 {
  "home": "Fremantle",
  "away": "Geelong",
- "complete": 15.0,
- "home_score": 25,
+ "complete": 16.0,
+ "home_score": 26,
  "away_score": 7,
  "home_goals": 4,
- "home_behinds": 1,
+ "home_behinds": 2,
  "away_goals": 1,
  "away_behinds": 1,
- "clock": "Q1 18:25",
+ "clock": "Q1 20:23",
  "winner": null,
- "squiggle_updated": "2026-09-11 20:29:46",
- "polled_at": "2026-09-11T20:30:28+10:00"
+ "squiggle_updated": "2026-09-11 20:31:46",
+ "polled_at": "2026-09-11T20:32:02+10:00"
 }
