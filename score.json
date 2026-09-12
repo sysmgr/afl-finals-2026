@@ -1,15 +1,15 @@
 {
  "home": "Brisbane Lions",
  "away": "Adelaide",
- "complete": 39.0,
+ "complete": 40.0,
  "home_score": 68,
  "away_score": 34,
  "home_goals": 10,
  "home_behinds": 8,
  "away_goals": 5,
  "away_behinds": 4,
- "clock": "Q2 17:56",
+ "clock": "Q2 18:45",
  "winner": null,
- "squiggle_updated": "2026-09-12 20:34:25",
- "polled_at": "2026-09-12T20:34:29+10:00"
+ "squiggle_updated": "2026-09-12 20:35:24",
+ "polled_at": "2026-09-12T20:36:03+10:00"
 }
