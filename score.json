@@ -3,13 +3,13 @@
  "away": "Adelaide",
  "complete": 98.0,
  "home_score": 144,
- "away_score": 79,
+ "away_score": 85,
  "home_goals": 21,
  "home_behinds": 18,
- "away_goals": 11,
+ "away_goals": 12,
  "away_behinds": 13,
- "clock": "Q4 27:38",
+ "clock": "Q4 28:38",
  "winner": null,
- "squiggle_updated": "2026-09-12 22:12:20",
- "polled_at": "2026-09-12T22:12:31+10:00"
+ "squiggle_updated": "2026-09-12 22:13:23",
+ "polled_at": "2026-09-12T22:14:07+10:00"
 }
