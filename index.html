@@ -86,14 +86,22 @@ h1{margin:0;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:
 .phead h2{margin:0;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.15rem;letter-spacing:.04em}
 
 /* --- the board --- */
-.row{display:grid;grid-template-columns:28px minmax(0,1fr) 88px;gap:8px 12px;align-items:center;
-  padding:12px 16px;border-bottom:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:28px minmax(0,1fr) 96px;gap:8px 12px;align-items:center;
+  padding:14px 16px;border-bottom:1px solid var(--rule2)}
+.row:nth-child(even){background:var(--raised)}
 .row:last-child{border-bottom:0}
 .row.out{opacity:.42}
 .seed{font-family:"Barlow Condensed",sans-serif;font-weight:600;color:var(--ink3);font-size:1rem;text-align:center}
 .club{min-width:0}
-.cname{font-weight:600;font-size:1.02rem;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.cmeta{font-size:.78rem;color:var(--ink3)}
+/* the club name leads the row: every number on it belongs to this name (a reader took Fremantle's
+   "reach GF 54%" for Sydney's when the name was body-size text beside a tag) */
+.cname{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.5rem;line-height:1.1;
+  letter-spacing:.01em;color:var(--ink)}
+.cmeta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-top:3px;font-size:.84rem;color:var(--ink2)}
+.cmeta b{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1rem;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.pct .k{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:.7rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink3)}
 .track{position:relative;height:8px;background:var(--raised);border-radius:4px;margin-top:7px;overflow:hidden}
 .track .band{position:absolute;top:0;bottom:0;background:var(--band)}
 .track .fill{position:absolute;top:0;bottom:0;left:0;background:var(--led);border-radius:4px}
@@ -250,14 +258,16 @@ a{color:var(--led)}
       return `<div class="row${c.alive===false?' out':''}">
         <span class="seed">${c.seed ?? ''}</span>
         <div class="club">
-          <div class="cname">${c.team} ${need}</div>
-          <div class="cmeta">reach GF ${c.reach_gf!=null?pc(c.reach_gf,0):'—'}${c.wins_needed>2&&c.reach_pf!=null?' · reach PF '+pc(c.reach_pf,0):''}</div>
+          <div class="cname">${c.team}</div>
+          <div class="cmeta">${need}${c.alive===false ? '' :
+            `<span>${short(c.team)} to reach the GF <b>${c.reach_gf!=null?pc(c.reach_gf,0):'—'}</b></span>` +
+            (c.wins_needed>2&&c.reach_pf!=null ? `<span>to reach the prelim <b>${pc(c.reach_pf,0)}</b></span>` : '')}</div>
           <div class="track" role="img" aria-label="${c.team} ${pc(c.flag)}">
             <span class="band" style="left:${w(c.lo)}%;width:${(w(c.hi)-w(c.lo)).toFixed(1)}%"></span>
             <span class="fill" style="width:${w(c.flag)}%"></span>
           </div>
         </div>
-        <div class="pct"><div class="v">${pc(c.flag)}</div><div class="r">${pc(c.lo,1)}–${pc(c.hi,1)}</div></div>
+        <div class="pct"><div class="k">Flag</div><div class="v">${pc(c.flag)}</div><div class="r">${pc(c.lo,1)}–${pc(c.hi,1)}</div></div>
       </div>`; }).join('') : '<div class="empty">No clubs in the forecast yet.</div>';
 
     // games
