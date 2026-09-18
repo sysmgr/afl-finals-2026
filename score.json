@@ -1,15 +1,15 @@
 {
  "home": "Sydney",
  "away": "Fremantle",
- "complete": 65.0,
+ "complete": 66.0,
  "home_score": 69,
  "away_score": 42,
  "home_goals": 10,
  "home_behinds": 9,
  "away_goals": 6,
  "away_behinds": 6,
- "clock": "Q3 18:18",
+ "clock": "Q3 20:17",
  "winner": null,
- "squiggle_updated": "2026-09-18 21:28:53",
- "polled_at": "2026-09-18T21:30:03+10:00"
+ "squiggle_updated": "2026-09-18 21:30:53",
+ "polled_at": "2026-09-18T21:31:37+10:00"
 }
