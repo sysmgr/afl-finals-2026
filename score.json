@@ -3,13 +3,13 @@
  "away": "Fremantle",
  "complete": 1.0,
  "home_score": 0,
- "away_score": 0,
+ "away_score": 7,
  "home_goals": 0,
  "home_behinds": 0,
- "away_goals": 0,
- "away_behinds": 0,
- "clock": "Q1 0:07",
+ "away_goals": 1,
+ "away_behinds": 1,
+ "clock": "Q1 1:50",
  "winner": null,
- "squiggle_updated": "2026-09-18 19:41:37",
- "polled_at": "2026-09-18T19:42:13+10:00"
+ "squiggle_updated": "2026-09-18 19:43:25",
+ "polled_at": "2026-09-18T19:43:49+10:00"
 }
