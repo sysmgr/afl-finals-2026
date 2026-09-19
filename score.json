@@ -2,14 +2,14 @@
  "home": "Hawthorn",
  "away": "Brisbane Lions",
  "complete": 93.0,
- "home_score": 109,
+ "home_score": 115,
  "away_score": 113,
- "home_goals": 17,
+ "home_goals": 18,
  "home_behinds": 7,
  "away_goals": 17,
  "away_behinds": 11,
- "clock": "Q4 21:49",
+ "clock": "Q4 22:40",
  "winner": null,
- "squiggle_updated": "2026-09-19 19:48:36",
- "polled_at": "2026-09-19T19:48:47+10:00"
+ "squiggle_updated": "2026-09-19 19:49:29",
+ "polled_at": "2026-09-19T19:50:20+10:00"
 }
