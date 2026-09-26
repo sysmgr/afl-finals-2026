@@ -1,15 +1,15 @@
 {
  "home": "Brisbane Lions",
  "away": "Fremantle",
- "complete": 97.0,
- "home_score": 84,
+ "complete": 99.0,
+ "home_score": 90,
  "away_score": 89,
- "home_goals": 12,
+ "home_goals": 13,
  "home_behinds": 12,
  "away_goals": 12,
  "away_behinds": 17,
- "clock": "Q4 27:26",
+ "clock": "Q4 29:31",
  "winner": null,
- "squiggle_updated": "2026-09-26 17:11:16",
- "polled_at": "2026-09-26T17:12:14+10:00"
+ "squiggle_updated": "2026-09-26 17:13:24",
+ "polled_at": "2026-09-26T17:13:48+10:00"
 }
